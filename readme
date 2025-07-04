@@ -1,0 +1,82 @@
+# 🎥 Resumo de Vídeo com IA
+
+## 📋 Descrição
+
+Este projeto utiliza inteligência artificial para transcrever e resumir vídeos do YouTube automaticamente. Desenvolvido em Python, ele combina as bibliotecas `pytube` para download de vídeos e `whisper` da OpenAI para transcrição de áudio.
+
+## 🚧 Status do Projeto
+
+**⚠️ EM DESENVOLVIMENTO ⚠️**
+
+Este projeto está atualmente em fase de desenvolvimento ativo. Novas funcionalidades estão sendo implementadas e melhorias estão sendo feitas regularmente.
+
+## ✨ Funcionalidades Atuais
+
+- ✅ Download de áudio de vídeos do YouTube
+- ✅ Transcrição automática usando Whisper AI
+- ✅ Limpeza automática de arquivos temporários
+- 🔄 Resumo inteligente do conteúdo (em desenvolvimento)
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Python 3.x**
+- **pytube** - Download de vídeos do YouTube
+- **whisper** - Transcrição de áudio usando IA da OpenAI
+- **os** - Manipulação de arquivos do sistema
+
+## 📦 Instalação
+
+### Pré-requisitos
+- Python 3.7 ou superior
+- pip (gerenciador de pacotes do Python)
+
+### Dependências
+
+```bash
+pip install pytube
+pip install openai-whisper
+```
+
+## 🚀 Como Usar
+
+1. Execute o script:
+```bash
+python Resumo-IA.py
+```
+
+2. Insira a URL do vídeo do YouTube quando solicitado
+
+3. Aguarde o processamento:
+   - Download do áudio
+   - Transcrição com IA
+   - Exibição do texto transcrito
+
+## 📁 Estrutura do Projeto
+
+```
+resumo-video-IA/
+├── Resumo-IA.py      # Script principal
+└── readme            # Este arquivo
+```
+
+## 🔮 Funcionalidades Futuras
+
+- [ ] Resumo automático do texto transcrito
+- [ ] Interface gráfica de usuário (GUI)
+- [ ] Suporte para múltiplos idiomas
+- [ ] Exportação para diferentes formatos (PDF, TXT, MD)
+- [ ] Análise de sentimentos do conteúdo
+- [ ] Extração de palavras-chave
+- [ ] Timestamps para navegação
+
+## 🤝 Contribuições
+
+Este projeto está em desenvolvimento ativo. Contribuições, sugestões e relatórios de bugs são bem-vindos!
+
+## 📝 Licença
+
+Este projeto está em desenvolvimento. Informações sobre licenciamento serão atualizadas em breve.
+
+---
+
+*Última atualização: Julho 2025*
