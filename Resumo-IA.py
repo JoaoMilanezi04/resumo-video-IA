@@ -8,6 +8,64 @@ import subprocess
 import yt_dlp
 import whisper
 import configparser
+import threading
+from tqdm import tqdm
+
+class Spinner:
+    """Classe para exibir um spinner de carregamento."""
+    def __init__(self, message="Processando"):
+        self.message = message
+        self.running = False
+        self.thread = None
+    
+    def start(self):
+        """Inicia o spinner."""
+        self.running = True
+        self.thread = threading.Thread(target=self._spin)
+        self.thread.start()
+    
+    def stop(self):
+        """Para o spinner."""
+        self.running = False
+        if self.thread:
+            self.thread.join()
+        print("\r" + " " * (len(self.message) + 10) + "\r", end="")
+    
+    def _spin(self):
+        """Animação do spinner."""
+        chars = "|/-\\"
+        i = 0
+        while self.running:
+            print(f"\r{self.message}... {chars[i % len(chars)]}", end="", flush=True)
+            time.sleep(0.1)
+            i += 1
+
+def progress_hook(d):
+    """Hook para mostrar progresso do download com yt-dlp."""
+    if d['status'] == 'downloading':
+        # Extrai informações do progresso
+        total_bytes = d.get('total_bytes') or d.get('total_bytes_estimate', 0)
+        downloaded_bytes = d.get('downloaded_bytes', 0)
+        
+        if total_bytes > 0:
+            # Calcula a porcentagem
+            percent = (downloaded_bytes / total_bytes) * 100
+            speed = d.get('speed', 0)
+            speed_str = f"{speed/1024/1024:.1f} MB/s" if speed else "N/A"
+            
+            # Formata o tamanho dos arquivos
+            total_mb = total_bytes / 1024 / 1024
+            downloaded_mb = downloaded_bytes / 1024 / 1024
+            
+            # Cria a barra de progresso manualmente
+            bar_length = 30
+            filled_length = int(bar_length * downloaded_bytes // total_bytes)
+            bar = '█' * filled_length + '-' * (bar_length - filled_length)
+            
+            print(f"\r[{bar}] {percent:.1f}% ({downloaded_mb:.1f}/{total_mb:.1f} MB) - {speed_str}", end="", flush=True)
+    
+    elif d['status'] == 'finished':
+        print(f"\n[+] Download concluído: {d['filename']}")
 
 def carregar_configuracoes():
     """Carrega as configurações do arquivo config.ini."""
@@ -54,6 +112,7 @@ def download_video(video_url):
             'extractaudio': True,
             'audioformat': 'mp4',
             'audioquality': '192K',
+            'progress_hooks': [progress_hook],  # Adiciona o hook de progresso
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -92,24 +151,42 @@ def transcribe_audio(audio_file):
     """Transcreve o áudio para texto usando Whisper."""
     try:
         print("A transcrever o ficheiro de áudio:", audio_file)
+        
+        # Inicia o spinner para carregamento do modelo
+        spinner = Spinner("Carregando modelo Whisper")
+        spinner.start()
+        
         model = whisper.load_model("base")
+        
+        spinner.stop()
+        
+        # Novo spinner para transcrição
+        spinner = Spinner("Transcrevendo áudio (isso pode demorar alguns minutos)")
+        spinner.start()
+        
         result = model.transcribe(audio_file, fp16=False)
-        print("Transcrição concluída.")
+        
+        spinner.stop()
+        print("[+] Transcrição concluída.")
         return result['text']
     except Exception as e:
+        if 'spinner' in locals():
+            spinner.stop()
         print("Erro ao transcrever o áudio:", e)
         return None
     
 def resume_video_gemini(texto_resumir, api_key):
     """Envia o texto para a API do Gemini e retorna um resumo."""
-    print("A resumir o texto com o Gemini...")
+    # Inicia o spinner para o resumo
+    spinner = Spinner("Gerando resumo com IA (Gemini)")
+    spinner.start()
     
     gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={api_key}"
     
     prompt = (
         "Com base no seguinte texto de uma transcrição de vídeo do YouTube, faça um resumo."
         "O resumo deve ser direto, conciso, conter os pontos principais do vídeo e as ideias centrais."
-        "Estruture o resumo usando marcadores (bullet points)."
+        "Estruture o resumo usando marcadores."
         "--- TRANSCRIÇÃO DO VÍDEO ---"
         f"{texto_resumir}"
         "--- FIM DA TRANSCRIÇÃO ---"
@@ -129,9 +206,11 @@ def resume_video_gemini(texto_resumir, api_key):
         response_data = response.json()
         resumo = response_data['candidates'][0]['content']['parts'][0]['text']
         
+        spinner.stop()
         print("[+] Resumo gerado com sucesso!")
         return resumo
     except Exception as e:
+        spinner.stop()
         print(f"[!] Ocorreu um erro ao contactar a API do Gemini: {e}")
         if 'response' in locals():
             print(f"[!] Resposta da API: {response.text}")

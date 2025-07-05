@@ -16,6 +16,9 @@ Este projeto utiliza inteligência artificial para transcrever e resumir vídeos
 - ✅ Interface de linha de comando com argumentos opcionais
 - ✅ Sistema de atualização automática da biblioteca yt-dlp
 - ✅ Tratamento robusto de erros e recuperação automática
+- ✅ **Barras de progresso visual** para downloads
+- ✅ **Spinners de carregamento** para transcrição e resumo
+- ✅ **Feedback visual aprimorado** para melhor experiência do usuário
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -23,6 +26,8 @@ Este projeto utiliza inteligência artificial para transcrever e resumir vídeos
 - **yt-dlp** - Download de vídeos do YouTube
 - **whisper** - Transcrição de áudio usando IA da OpenAI
 - **Google Gemini API** - Geração de resumos com IA avançada
+- **tqdm** - Barras de progresso e feedback visual
+- **threading** - Animações de carregamento (spinners)
 - **argparse** - Processamento de argumentos de linha de comando
 - **requests** - Comunicação HTTP com a API do Gemini
 
