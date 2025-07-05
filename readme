@@ -2,7 +2,7 @@
 
 ## 📋 Descrição
 
-Este projeto utiliza inteligência artificial para transcrever e resumir vídeos do YouTube automaticamente. Desenvolvido em Python, ele combina as bibliotecas `pytube` para download de vídeos e `whisper` da OpenAI para transcrição de áudio.
+Este projeto utiliza inteligência artificial para transcrever e resumir vídeos do YouTube automaticamente. Desenvolvido em Python, ele combina as bibliotecas `pytube` para download de vídeos, `whisper` da OpenAI para transcrição de áudio, e a API do Google Gemini para geração de resumos em formato de marcadores (bullet points).
 
 ## 🚧 Status do Projeto
 
@@ -12,62 +12,98 @@ Este projeto está atualmente em fase de desenvolvimento ativo. Novas funcionali
 
 ## ✨ Funcionalidades Atuais
 
-- ✅ Download de áudio de vídeos do YouTube
+- ✅ Download de áudio de vídeos do YouTube (com tratamento aprimorado de erros)
 - ✅ Transcrição automática usando Whisper AI
+- ✅ Resumo inteligente com Google Gemini API
+- ✅ Salvamento opcional dos resumos em arquivos de texto
 - ✅ Limpeza automática de arquivos temporários
-- 🔄 Resumo inteligente do conteúdo (em desenvolvimento)
+- ✅ Interface de linha de comando com argumentos opcionais
+- ✅ Sistema de atualização da biblioteca pytube
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Python 3.x**
+- **Python 3.x** - Linguagem base do projeto
 - **pytube** - Download de vídeos do YouTube
 - **whisper** - Transcrição de áudio usando IA da OpenAI
-- **os** - Manipulação de arquivos do sistema
+- **Google Gemini API** - Geração de resumos com IA avançada
+- **argparse** - Processamento de argumentos de linha de comando
+- **requests** - Comunicação HTTP com a API do Gemini
 
 ## 📦 Instalação
 
 ### Pré-requisitos
 - Python 3.7 ou superior
 - pip (gerenciador de pacotes do Python)
+- Chave de API do Google Gemini (obtenha em https://aistudio.google.com/)
 
 ### Dependências
 
+Instale todas as dependências de uma vez com:
+```bash
+pip install -r requirements.txt
+```
+
+Ou instale manualmente cada biblioteca:
 ```bash
 pip install pytube
 pip install openai-whisper
+pip install requests
+```
+
+### Atualização do PyTube
+Se encontrar problemas com o download do YouTube, atualize o PyTube:
+```bash
+python Resumo-IA.py --update
 ```
 
 ## 🚀 Como Usar
 
-1. Execute o script:
+### Modo Interativo:
+
 ```bash
 python Resumo-IA.py
 ```
+Siga as instruções no terminal para inserir a URL do vídeo e sua chave da API Gemini.
 
-2. Insira a URL do vídeo do YouTube quando solicitado
+### Com Argumentos de Linha de Comando:
 
-3. Aguarde o processamento:
-   - Download do áudio
-   - Transcrição com IA
-   - Exibição do texto transcrito
+```bash
+python Resumo-IA.py -u "URL_DO_VIDEO" -k "SUA_CHAVE_API_GEMINI" -s
+```
+
+### Parâmetros Disponíveis:
+- `-u, --url`: URL do vídeo do YouTube
+- `-k, --key`: Chave da API do Google Gemini
+- `-s, --save`: Salvar o resumo em um arquivo de texto
+- `--update`: Atualizar a biblioteca pytube
+
+### Fluxo de Processamento:
+1. Download do áudio do vídeo
+2. Transcrição usando modelo Whisper
+3. Geração de resumo usando API Gemini
+4. Exibição do resumo e/ou salvamento em arquivo
 
 ## 📁 Estrutura do Projeto
 
 ```
 resumo-video-IA/
-├── Resumo-IA.py      # Script principal
-└── readme            # Este arquivo
+├── Resumo-IA.py       # Script principal
+├── requirements.txt   # Dependências do projeto
+├── .gitignore         # Arquivos ignorados pelo Git
+└── readme             # Este arquivo
 ```
 
 ## 🔮 Funcionalidades Futuras
 
-- [ ] Resumo automático do texto transcrito
+- [x] ~~Resumo automático do texto transcrito~~ ✓ Implementado com API Gemini
 - [ ] Interface gráfica de usuário (GUI)
-- [ ] Suporte para múltiplos idiomas
-- [ ] Exportação para diferentes formatos (PDF, TXT, MD)
+- [ ] Suporte para múltiplos idiomas na transcrição
+- [ ] Opções de personalização do resumo (tamanho, estilo)
+- [ ] Exportação para diferentes formatos (PDF, MD, DOCX)
 - [ ] Análise de sentimentos do conteúdo
-- [ ] Extração de palavras-chave
-- [ ] Timestamps para navegação
+- [ ] Extração de palavras-chave e tópicos principais
+- [ ] Adição de timestamps para navegação no vídeo
+- [ ] Opção para processar múltiplos vídeos em lote
 
 ## 🤝 Contribuições
 
