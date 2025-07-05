@@ -5,43 +5,54 @@ import argparse
 import requests
 import json
 import subprocess
-from pytube import YouTube
+import yt_dlp
 import whisper
 
 def download_video(video_url):
-    """Baixa o áudio de um vídeo do YouTube."""
+    """Baixa o áudio de um vídeo do YouTube usando yt-dlp."""
     try:
         print("A baixar o vídeo do URL:", video_url)
         
-        # Configura a instância do YouTube com tentativas adicionais
-        yt = YouTube(
-            video_url,
-            use_oauth=False,
-            allow_oauth_cache=True
-        )
+        # Configurações para yt-dlp
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'outtmpl': 'audio.%(ext)s',
+            'noplaylist': True,
+            'extractaudio': True,
+            'audioformat': 'mp4',
+            'audioquality': '192K',
+        }
         
-        # Seleciona preferencialmente uma stream de áudio, ou uma de menor qualidade
-        video = yt.streams.filter(only_audio=True).first()
-        
-        # Se não encontrou stream de áudio, tenta qualquer stream disponível
-        if not video:
-            video = yt.streams.get_lowest_resolution()
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            # Baixa o áudio
+            ydl.download([video_url])
             
-        if not video:
-            raise Exception("Não foi possível encontrar nenhum stream disponível para este vídeo")
-            
-        arquivo_baixado = video.download()
-        print("Download concluído:", arquivo_baixado)
+        # Procura pelo arquivo baixado
+        for arquivo in os.listdir('.'):
+            if arquivo.startswith('audio.') and not arquivo.endswith('.mp4'):
+                # Renomeia para .mp4 se necessário
+                os.rename(arquivo, 'audio.mp4')
+                break
         
-        os.rename(arquivo_baixado, "audio.mp4")
-        return "audio.mp4"
+        if os.path.exists('audio.mp4'):
+            print("Download concluído: audio.mp4")
+            return "audio.mp4"
+        else:
+            # Se não encontrou audio.mp4, procura por qualquer arquivo de áudio
+            for arquivo in os.listdir('.'):
+                if arquivo.startswith('audio.'):
+                    print(f"Download concluído: {arquivo}")
+                    return arquivo
+            
+            raise Exception("Arquivo de áudio não foi encontrado após o download")
+            
     except Exception as e:
         print("Erro ao baixar o vídeo:", e)
         print("\nDicas para resolver:")
         print("1. Verifique se o URL está correto e se o vídeo está disponível")
-        print("2. O YouTube pode estar bloqueando o download automático deste vídeo")
-        print("3. Tente atualizar a biblioteca pytube: pip install --upgrade pytube")
-        print("4. Tente outro vídeo para testar se o problema é específico deste vídeo")
+        print("2. O vídeo pode ter restrições de idade ou geográficas")
+        print("3. Tente outro vídeo para testar se o problema é específico deste vídeo")
+        print("4. Verifique sua conexão com a internet")
         return None
     
 def transcribe_audio(audio_file):
@@ -113,16 +124,15 @@ def salvar_resumo(texto, url):
         print(f"[!] Erro ao salvar o resumo: {e}")
         return None
 
-def verificar_pytube():
-    """Verifica e tenta atualizar a biblioteca pytube se necessário."""
+def verificar_ytdlp():
+    """Verifica e tenta atualizar a biblioteca yt-dlp se necessário."""
     try:
-        # Tenta atualizar o pytube para a versão mais recente
-        print("Verificando a versão do pytube...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pytube"])
-        print("PyTube atualizado com sucesso!\n")
+        print("Verificando a versão do yt-dlp...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "yt-dlp"])
+        print("yt-dlp atualizado com sucesso!\n")
         return True
     except Exception as e:
-        print(f"Erro ao atualizar pytube: {e}")
+        print(f"Erro ao atualizar yt-dlp: {e}")
         return False
 
 def mostrar_banner():
@@ -183,13 +193,13 @@ if __name__ == "__main__":
     parser.add_argument("-u", "--url", help="URL do vídeo do YouTube")
     parser.add_argument("-k", "--key", help="Chave da API do Google AI Studio (Gemini)")
     parser.add_argument("-s", "--save", action="store_true", help="Salvar o resumo em arquivo de texto")
-    parser.add_argument("--update", action="store_true", help="Atualizar a biblioteca pytube")
+    parser.add_argument("--update", action="store_true", help="Atualizar a biblioteca yt-dlp")
     
     args = parser.parse_args()
     
     # Se solicitada atualização
     if args.update:
-        verificar_pytube()
+        verificar_ytdlp()
     
     url_do_video = args.url if args.url else input("=> Insira o URL do vídeo do YouTube: ")
     api_key_usuario = args.key if args.key else input("=> Insira a sua chave de API do Google AI Studio (Gemini): ")
@@ -202,10 +212,10 @@ if __name__ == "__main__":
     # Tenta processar o vídeo
     resultado = processar_video(url_do_video, api_key_usuario, salvar)
     
-    # Se falhou, oferece opção de atualizar pytube
+    # Se falhou, oferece opção de atualizar yt-dlp
     if not resultado and "youtube.com" in url_do_video:
         print("\n[!] Encontrou problemas com o download do YouTube.")
-        try_fix = input("Deseja tentar atualizar a biblioteca pytube? (s/n): ").lower()
+        try_fix = input("Deseja tentar atualizar a biblioteca yt-dlp? (s/n): ").lower()
         if try_fix == "s":
-            verificar_pytube()
+            verificar_ytdlp()
             print("\nTente executar o programa novamente com o mesmo URL.")

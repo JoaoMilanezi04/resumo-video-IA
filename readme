@@ -2,28 +2,25 @@
 
 ## 📋 Descrição
 
-Este projeto utiliza inteligência artificial para transcrever e resumir vídeos do YouTube automaticamente. Desenvolvido em Python, ele combina as bibliotecas `pytube` para download de vídeos, `whisper` da OpenAI para transcrição de áudio, e a API do Google Gemini para geração de resumos em formato de marcadores (bullet points).
-
-## 🚧 Status do Projeto
+Este projeto utiliza inteligência artificial para transcrever e resumir vídeos do YouTube automaticamente. Desenvolvido em Python, ele combina a biblioteca `yt-dlp` para download de vídeos, `whisper` da OpenAI para transcrição de áudio, e a API do Google Gemini para geração de resumos em formato de marcadores (bullet points).
 
 **⚠️ EM DESENVOLVIMENTO ⚠️**
 
-Este projeto está atualmente em fase de desenvolvimento ativo. Novas funcionalidades estão sendo implementadas e melhorias estão sendo feitas regularmente.
-
 ## ✨ Funcionalidades Atuais
 
-- ✅ Download de áudio de vídeos do YouTube (com tratamento aprimorado de erros)
+- ✅ Download de áudio de vídeos do YouTube usando yt-dlp
 - ✅ Transcrição automática usando Whisper AI
 - ✅ Resumo inteligente com Google Gemini API
 - ✅ Salvamento opcional dos resumos em arquivos de texto
 - ✅ Limpeza automática de arquivos temporários
 - ✅ Interface de linha de comando com argumentos opcionais
-- ✅ Sistema de atualização da biblioteca pytube
+- ✅ Sistema de atualização automática da biblioteca yt-dlp
+- ✅ Tratamento robusto de erros e recuperação automática
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Python 3.x** - Linguagem base do projeto
-- **pytube** - Download de vídeos do YouTube
+- **yt-dlp** - Download de vídeos do YouTube
 - **whisper** - Transcrição de áudio usando IA da OpenAI
 - **Google Gemini API** - Geração de resumos com IA avançada
 - **argparse** - Processamento de argumentos de linha de comando
@@ -32,50 +29,14 @@ Este projeto está atualmente em fase de desenvolvimento ativo. Novas funcionali
 ## 📦 Instalação
 
 ### Pré-requisitos
-- Python 3.7 ou superior
-- pip (gerenciador de pacotes do Python)
-- Chave de API do Google Gemini (obtenha em https://aistudio.google.com/)
 
-### Dependências
-
-Instale todas as dependências de uma vez com:
-```bash
-pip install -r requirements.txt
-```
-
-Ou instale manualmente cada biblioteca:
-```bash
-pip install pytube
-pip install openai-whisper
-pip install requests
-```
-
-### Atualização do PyTube
-Se encontrar problemas com o download do YouTube, atualize o PyTube:
-```bash
-python Resumo-IA.py --update
-```
-
-## 🚀 Como Usar
-
-### Modo Interativo:
-
-```bash
-python Resumo-IA.py
-```
-Siga as instruções no terminal para inserir a URL do vídeo e sua chave da API Gemini.
-
-### Com Argumentos de Linha de Comando:
-
-```bash
-python Resumo-IA.py -u "URL_DO_VIDEO" -k "SUA_CHAVE_API_GEMINI" -s
-```
+- Chave de API do Google Gemini (https://aistudio.google.com/)
 
 ### Parâmetros Disponíveis:
 - `-u, --url`: URL do vídeo do YouTube
 - `-k, --key`: Chave da API do Google Gemini
 - `-s, --save`: Salvar o resumo em um arquivo de texto
-- `--update`: Atualizar a biblioteca pytube
+- `--update`: Atualizar a biblioteca yt-dlp
 
 ### Fluxo de Processamento:
 1. Download do áudio do vídeo
@@ -83,31 +44,23 @@ python Resumo-IA.py -u "URL_DO_VIDEO" -k "SUA_CHAVE_API_GEMINI" -s
 3. Geração de resumo usando API Gemini
 4. Exibição do resumo e/ou salvamento em arquivo
 
-## 📁 Estrutura do Projeto
+## ⚠️ Solução de Problemas
 
-```
-resumo-video-IA/
-├── Resumo-IA.py       # Script principal
-├── requirements.txt   # Dependências do projeto
-├── .gitignore         # Arquivos ignorados pelo Git
-└── readme             # Este arquivo
-```
+### Erro de download do YouTube
+- **Primeira opção**: Execute `python Resumo-IA.py --update` para atualizar o yt-dlp
+- **Se o problema persistir**: O vídeo pode ter restrições de idade ou geográficas
+- **Teste**: Tente com outro vídeo para verificar se o problema é específico
+- **Nota**: O yt-dlp é mais robusto que o pytube e resolve a maioria dos problemas de download
 
-## 🔮 Funcionalidades Futuras
+### Problemas com a API do Gemini
+- Verifique se sua chave de API está correta e ativa
+- Certifique-se de ter créditos disponíveis na sua conta Google AI Studio
+- Verifique o tamanho da transcrição (textos muito longos podem ser recusados)
 
-- [x] ~~Resumo automático do texto transcrito~~ ✓ Implementado com API Gemini
-- [ ] Interface gráfica de usuário (GUI)
-- [ ] Suporte para múltiplos idiomas na transcrição
-- [ ] Opções de personalização do resumo (tamanho, estilo)
-- [ ] Exportação para diferentes formatos (PDF, MD, DOCX)
-- [ ] Análise de sentimentos do conteúdo
-- [ ] Extração de palavras-chave e tópicos principais
-- [ ] Adição de timestamps para navegação no vídeo
-- [ ] Opção para processar múltiplos vídeos em lote
-
-## 🤝 Contribuições
-
-Este projeto está em desenvolvimento ativo. Contribuições, sugestões e relatórios de bugs são bem-vindos!
+### Problemas com Transcrição
+- Certifique-se de ter espaço livre suficiente no disco (o Whisper baixa modelos grandes)
+- Se o áudio estiver corrompido, tente outro vídeo
+- Para vídeos muito longos, o processamento pode demorar mais
 
 ---
 
