@@ -7,6 +7,39 @@ import json
 import subprocess
 import yt_dlp
 import whisper
+import configparser
+
+def carregar_configuracoes():
+    """Carrega as configurações do arquivo config.ini."""
+    config = configparser.ConfigParser()
+    config_file = 'config.ini'
+    
+    if not os.path.exists(config_file):
+        print(f"[!] Arquivo de configuração '{config_file}' não encontrado.")
+        return None
+    
+    try:
+        config.read(config_file)
+        if 'DEFAULT' in config and 'api_key' in config['DEFAULT']:
+            return config['DEFAULT']['api_key']
+        else:
+            print("[!] Chave da API não encontrada nas configurações.")
+            return None
+    except Exception as e:
+        print(f"[!] Erro ao carregar o arquivo de configuração: {e}")
+        return None
+
+def salvar_configuracoes(api_key):
+    """Salva a chave da API no arquivo config.ini."""
+    config = configparser.ConfigParser()
+    config['DEFAULT'] = {'api_key': api_key}
+    
+    try:
+        with open('config.ini', 'w') as configfile:
+            config.write(configfile)
+        print("[+] Configurações salvas com sucesso.")
+    except Exception as e:
+        print(f"[!] Erro ao salvar as configurações: {e}")
 
 def download_video(video_url):
     """Baixa o áudio de um vídeo do YouTube usando yt-dlp."""
@@ -201,8 +234,20 @@ if __name__ == "__main__":
     if args.update:
         verificar_ytdlp()
     
+    # Obter URL do vídeo
     url_do_video = args.url if args.url else input("=> Insira o URL do vídeo do YouTube: ")
-    api_key_usuario = args.key if args.key else input("=> Insira a sua chave de API do Google AI Studio (Gemini): ")
+    
+    # Obter chave da API (uma única vez)
+    api_key_usuario = args.key 
+    
+    if not api_key_usuario:
+        # Tenta carregar a chave da API do arquivo de configuração
+        api_key_usuario = carregar_configuracoes()
+        
+        if not api_key_usuario:
+            api_key_usuario = input("=> Insira a sua chave de API do Google AI Studio (Gemini): ")
+            salvar_configuracoes(api_key_usuario)
+    
     salvar = args.save
     
     if not url_do_video or not api_key_usuario:
