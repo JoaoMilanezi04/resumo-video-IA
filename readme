@@ -4,50 +4,128 @@
 
 Este projeto utiliza inteligência artificial para transcrever e resumir vídeos do YouTube automaticamente. Desenvolvido em Python, ele combina a biblioteca `yt-dlp` para download de vídeos, `whisper` da OpenAI para transcrição de áudio, e a API do Google Gemini para geração de resumos em formato de marcadores (bullet points).
 
-**⚠️ EM DESENVOLVIMENTO ⚠️**
+**✅ VERSÃO MELHORADA 2.0 ✅**
 
-## ✨ Funcionalidades Atuais
+## ✨ Funcionalidades
 
-- ✅ Download de áudio de vídeos do YouTube usando yt-dlp
-- ✅ Transcrição automática usando Whisper AI
-- ✅ Resumo inteligente com Google Gemini API
-- ✅ Salvamento opcional dos resumos em arquivos de texto
-- ✅ Limpeza automática de arquivos temporários
-- ✅ Interface de linha de comando com argumentos opcionais
-- ✅ Sistema de atualização automática da biblioteca yt-dlp
-- ✅ Tratamento robusto de erros e recuperação automática
+- ✅ **Download de áudio** de vídeos do YouTube usando yt-dlp
+- ✅ **Transcrição automática** usando Whisper AI com múltiplos modelos
+- ✅ **Resumo inteligente** com Google Gemini API
+- ✅ **Salvamento automático** dos resumos em arquivos de texto
+- ✅ **Limpeza automática** de arquivos temporários usando context managers
+- ✅ **Interface de linha de comando** com argumentos completos
+- ✅ **Sistema de atualização** automática da biblioteca yt-dlp
+- ✅ **Tratamento robusto de erros** com recuperação automática
 - ✅ **Barras de progresso visual** para downloads
 - ✅ **Spinners de carregamento** para transcrição e resumo
-- ✅ **Feedback visual aprimorado** para melhor experiência do usuário
+- ✅ **Sistema de logging** com timestamps
+- ✅ **Arquitetura orientada a objetos** com classes especializadas
+- ✅ **Configuração persistente** de chaves de API
+- ✅ **Múltiplos modelos Whisper** (tiny, base, small, medium, large)
+- ✅ **Diretório de saída customizável** para arquivos
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Python 3.x** - Linguagem base do projeto
 - **yt-dlp** - Download de vídeos do YouTube
-- **whisper** - Transcrição de áudio usando IA da OpenAI
+- **OpenAI Whisper** - Transcrição de áudio usando IA
 - **Google Gemini API** - Geração de resumos com IA avançada
 - **tqdm** - Barras de progresso e feedback visual
 - **threading** - Animações de carregamento (spinners)
 - **argparse** - Processamento de argumentos de linha de comando
 - **requests** - Comunicação HTTP com a API do Gemini
+- **pathlib** - Manipulação moderna de caminhos de arquivo
+- **dataclasses** - Estruturas de dados tipadas
+- **logging** - Sistema profissional de logs
 
 ## 📦 Instalação
 
 ### Pré-requisitos
-
+- Python 3.8 ou superior
 - Chave de API do Google Gemini (https://aistudio.google.com/)
 
-### Parâmetros Disponíveis:
+### Passos de Instalação
+
+1. **Clone o repositório:**
+```bash
+git clone <seu-repositorio>
+cd resumo-video-IA
+```
+
+2. **Instale as dependências:**
+```bash
+pip install -r requirements.txt
+```
+
+3. **Configure sua chave de API:**
+   - Execute o programa uma vez e insira sua chave quando solicitado
+   - Ou use o parâmetro `-k` na linha de comando
+   - A chave será salva automaticamente para uso futuro
+
+## 🚀 Como Usar
+
+### Uso Básico
+```bash
+# Forma mais simples
+python Resumo-IA.py
+
+# Com URL específica
+python Resumo-IA.py -u "https://youtube.com/watch?v=..."
+
+# Com chave de API
+python Resumo-IA.py -u "https://youtube.com/watch?v=..." -k "sua_chave_api"
+```
+
+### Uso Avançado
+```bash
+# Salvar resumo em arquivo
+python Resumo-IA.py -u "URL_DO_VIDEO" -s
+
+# Usar modelo Whisper mais preciso
+python Resumo-IA.py -u "URL_DO_VIDEO" -m large -s
+
+# Especificar diretório de saída
+python Resumo-IA.py -u "URL_DO_VIDEO" -s -o ./resumos/
+
+# Atualizar yt-dlp
+python Resumo-IA.py --update
+```
+
+### Parâmetros Disponíveis
 - `-u, --url`: URL do vídeo do YouTube
 - `-k, --key`: Chave da API do Google Gemini
 - `-s, --save`: Salvar o resumo em um arquivo de texto
+- `-m, --model`: Modelo Whisper (tiny/base/small/medium/large)
+- `-o, --output`: Diretório de saída para arquivos salvos
 - `--update`: Atualizar a biblioteca yt-dlp
 
-### Fluxo de Processamento:
-1. Download do áudio do vídeo
-2. Transcrição usando modelo Whisper
-3. Geração de resumo usando API Gemini
-4. Exibição do resumo e/ou salvamento em arquivo
+### Modelos Whisper Disponíveis
+- **tiny** - Mais rápido, menos preciso
+- **base** - Padrão, bom equilíbrio
+- **small** - Mais preciso que base
+- **medium** - Alta precisão
+- **large** - Máxima precisão, mais lento
+
+## 🏗️ Arquitetura do Projeto
+
+### Classes Principais
+- **`ProcessadorVideo`** - Classe principal que coordena todo o processo
+- **`BaixadorVideo`** - Responsável pelo download de vídeos do YouTube
+- **`TranscritorAudio`** - Gerencia a transcrição com Whisper
+- **`APIGemini`** - Cliente para API do Gemini
+- **`GerenciadorConfiguracao`** - Gerencia configurações e chaves de API
+- **`GerenciadorArquivos`** - Operações de arquivo e salvamento
+- **`GerenciadorSistema`** - Operações do sistema e atualizações
+- **`Carregador`** - Spinners de carregamento com context managers
+- **`GerenciadorProgresso`** - Barras de progresso para downloads
+
+### Fluxo de Processamento
+1. **Configuração** - Carrega ou solicita chave de API
+2. **Download** - Baixa áudio do vídeo com barra de progresso
+3. **Transcrição** - Converte áudio em texto usando Whisper
+4. **Resumo** - Gera resumo inteligente usando Gemini
+5. **Exibição/Salvamento** - Mostra resultado e/ou salva em arquivo
+6. **Limpeza** - Remove arquivos temporários automaticamente
 
 ## ⚠️ Solução de Problemas
 
@@ -55,18 +133,37 @@ Este projeto utiliza inteligência artificial para transcrever e resumir vídeos
 - **Primeira opção**: Execute `python Resumo-IA.py --update` para atualizar o yt-dlp
 - **Se o problema persistir**: O vídeo pode ter restrições de idade ou geográficas
 - **Teste**: Tente com outro vídeo para verificar se o problema é específico
-- **Nota**: O yt-dlp é mais robusto que o pytube e resolve a maioria dos problemas de download
+- **Nota**: O yt-dlp é mais robusto e resolve a maioria dos problemas de download
 
 ### Problemas com a API do Gemini
 - Verifique se sua chave de API está correta e ativa
 - Certifique-se de ter créditos disponíveis na sua conta Google AI Studio
 - Verifique o tamanho da transcrição (textos muito longos podem ser recusados)
+- Use o modelo Whisper 'small' ou 'base' para transcrições mais concisas
 
 ### Problemas com Transcrição
-- Certifique-se de ter espaço livre suficiente no disco (o Whisper baixa modelos grandes)
+- Certifique-se de ter espaço livre suficiente no disco (modelos Whisper são grandes)
 - Se o áudio estiver corrompido, tente outro vídeo
-- Para vídeos muito longos, o processamento pode demorar mais
+- Para vídeos muito longos, use modelos menores (tiny/base) para processamento mais rápido
+- Verifique se tem memória RAM suficiente para modelos grandes
+
+### Problemas de Performance
+- Use modelo 'tiny' para processamento mais rápido
+- Use modelo 'large' apenas para máxima precisão
+- Vídeos muito longos (>1h) podem demorar bastante para processar
+- Feche outros programas se estiver com pouca memória
+
+## 📁 Estrutura do Projeto
+
+```
+resumo-video-IA/
+├── Resumo-IA.py              # Código principal melhorado
+├── Resumo-IA-melhorado.py    # Versão alternativa
+├── requirements.txt          # Dependências do projeto
+├── config.ini               # Configurações (criado automaticamente)
+├── .gitignore               # Arquivos ignorados pelo Git
+├── readme.md                # Este arquivo
+└── resumos/                 # Diretório de resumos (opcional)
+```
 
 ---
-
-*Última atualização: Julho 2025*
