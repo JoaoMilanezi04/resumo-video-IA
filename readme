@@ -4,7 +4,7 @@
 
 Este projeto utiliza inteligência artificial para transcrever e resumir vídeos do YouTube automaticamente. Desenvolvido em Python, ele combina a biblioteca `yt-dlp` para download de vídeos, `whisper` da OpenAI para transcrição de áudio, e a API do Google Gemini para geração de resumos em formato de marcadores (bullet points).
 
-**✅ VERSÃO MELHORADA 2.0 ✅**
+**✅ Melhorias ✅**
 
 ## ✨ Funcionalidades
 
@@ -41,7 +41,6 @@ Este projeto utiliza inteligência artificial para transcrever e resumir vídeos
 ## 📦 Instalação
 
 ### Pré-requisitos
-- Python 3.8 ou superior
 - Chave de API do Google Gemini (https://aistudio.google.com/)
 
 ### Passos de Instalação
@@ -61,35 +60,6 @@ pip install -r requirements.txt
    - Execute o programa uma vez e insira sua chave quando solicitado
    - Ou use o parâmetro `-k` na linha de comando
    - A chave será salva automaticamente para uso futuro
-
-## 🚀 Como Usar
-
-### Uso Básico
-```bash
-# Forma mais simples
-python Resumo-IA.py
-
-# Com URL específica
-python Resumo-IA.py -u "https://youtube.com/watch?v=..."
-
-# Com chave de API
-python Resumo-IA.py -u "https://youtube.com/watch?v=..." -k "sua_chave_api"
-```
-
-### Uso Avançado
-```bash
-# Salvar resumo em arquivo
-python Resumo-IA.py -u "URL_DO_VIDEO" -s
-
-# Usar modelo Whisper mais preciso
-python Resumo-IA.py -u "URL_DO_VIDEO" -m large -s
-
-# Especificar diretório de saída
-python Resumo-IA.py -u "URL_DO_VIDEO" -s -o ./resumos/
-
-# Atualizar yt-dlp
-python Resumo-IA.py --update
-```
 
 ### Parâmetros Disponíveis
 - `-u, --url`: URL do vídeo do YouTube
